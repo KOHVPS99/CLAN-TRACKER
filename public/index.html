@@ -70,6 +70,7 @@ button{
   border:1px solid var(--line);
   padding:6px 10px;
   border-radius:12px;
+  white-space:nowrap;
 }
 .body{padding:14px}
 .stat{
@@ -85,6 +86,7 @@ button{
   font-weight:800;
   cursor:pointer;
   color:#9ecbff;
+  user-select:none;
 }
 .members{
   display:none;
@@ -104,46 +106,48 @@ button{
 
 <body>
 <div class="wrap">
-<header>
-  <h1>Clan Tracker</h1>
-  <button onclick="loadAll()">Refresh</button>
-</header>
+  <header>
+    <h1>Clan Tracker</h1>
+    <button onclick="loadAll()">Refresh</button>
+  </header>
 
-<div class="grid">
+  <div class="grid">
 
-<!-- KOHV -->
-<div class="card">
-  <div class="head">
-    <div class="left">
-      <img class="pfp"
-        src="https://cdn.discordapp.com/attachments/1342188579761160342/1460643923956469953/F29791E5-9C85-4CEC-8A95-591B501D5B09.png?ex=696852e8&is=69670168&hm=356fa3caa0e29e4b76d958a9547ccec7e508295107d9c4d8278620554db77de3&">
-      <div>
-        <b>KOHV</b>
-        <div class="place first">1st Clan</div>
+    <!-- KOHV -->
+    <div class="card">
+      <div class="head">
+        <div class="left">
+          <img class="pfp"
+            src="https://cdn.discordapp.com/attachments/1342188579761160342/1460643923956469953/F29791E5-9C85-4CEC-8A95-591B501D5B09.png?ex=696852e8&is=69670168&hm=356fa3caa0e29e4b76d958a9547ccec7e508295107d9c4d8278620554db77de3&"
+            alt="KOHV">
+          <div>
+            <b>KOHV</b>
+            <div class="place first">1st Clan</div>
+          </div>
+        </div>
+        <div class="rank" id="rankKOHV">Rank —</div>
       </div>
+      <div class="body" id="bodyKOHV">Loading…</div>
     </div>
-    <div class="rank" id="rankKOHV">Rank —</div>
-  </div>
-  <div class="body" id="bodyKOHV">Loading…</div>
-</div>
 
-<!-- TAUX -->
-<div class="card">
-  <div class="head">
-    <div class="left">
-      <img class="pfp"
-        src="https://cdn.discordapp.com/attachments/1342188579761160342/1460645618027593963/433EDF80-E411-4268-B946-B55A4CD88F74.png?ex=6968547c&is=696702fc&hm=b71d8a59e81ecc250ae3dc1a9febb3c79c5cd01f586615784361575d1228c62d&">
-      <div>
-        <b>TAUX</b>
-        <div class="place second">2nd Clan</div>
+    <!-- TAUX -->
+    <div class="card">
+      <div class="head">
+        <div class="left">
+          <img class="pfp"
+            src="https://cdn.discordapp.com/attachments/1342188579761160342/1460645618027593963/433EDF80-E411-4268-B946-B55A4CD88F74.png?ex=6968547c&is=696702fc&hm=b71d8a59e81ecc250ae3dc1a9febb3c79c5cd01f586615784361575d1228c62d&"
+            alt="TAUX">
+          <div>
+            <b>TAUX</b>
+            <div class="place second">2nd Clan</div>
+          </div>
+        </div>
+        <div class="rank" id="rankTAUX">Rank —</div>
       </div>
+      <div class="body" id="bodyTAUX">Loading…</div>
     </div>
-    <div class="rank" id="rankTAUX">Rank —</div>
-  </div>
-  <div class="body" id="bodyTAUX">Loading…</div>
-</div>
 
-</div>
+  </div>
 </div>
 
 <script>
@@ -154,59 +158,71 @@ async function getRanks(){
   return fetch(`/api/clans`).then(r=>r.json());
 }
 function findRank(list,name){
-  const i=list.findIndex(x=>x.Name===name);
-  return i===-1?null:i+1;
+  const i = list.findIndex(x => x.Name === name);
+  return i === -1 ? null : i + 1;
 }
 function render(name,data,list){
-  const body=document.getElementById("body"+name);
-  const rank=findRank(list,name);
-  document.getElementById("rank"+name).textContent=
-    rank?`Rank #${rank}`:"Rank —";
+  const body = document.getElementById("body"+name);
+  const rank = findRank(list, name);
 
-  const c=data.data;
-  const members=c.Members||[];
-  const officers=members.filter(m=>m.PermissionLevel>=80);
-  const regular=members.filter(m=>m.PermissionLevel<80);
+  document.getElementById("rank"+name).textContent =
+    rank ? `Rank #${rank}` : "Rank —";
 
-  const above = rank && list[rank-2];
-  const below = rank && list[rank];
+  if(!(data?.status === "ok" && data?.data)){
+    body.innerHTML = `<div style="color:#ffb4b4;font-weight:900">Couldn’t load ${name}.</div>`;
+    return;
+  }
 
-  const toOvertake = above
-    ? `#${rank-1} — ${above.Name} (${above.Points - list[rank-1].Points + 1} pts)`
-    : "Top clan";
+  const fmt = n => new Intl.NumberFormat().format(n);
 
-  const atRisk = below
-    ? `#${rank+1} — ${below.Name} (${list[rank-1].Points - below.Points + 1} pts)`
+  const c = data.data;
+  const members = Array.isArray(c.Members) ? c.Members : [];
+  const officers = members.filter(m => m && (m.PermissionLevel ?? 0) >= 80);
+  const regular  = members.filter(m => m && (m.PermissionLevel ?? 0) < 80);
+
+  const current = rank ? list[rank-1] : null;
+  const above   = rank ? list[rank-2] : null;
+  const below   = rank ? list[rank]   : null;
+
+  const toOvertake = (rank && above && current)
+    ? `#${rank-1} — ${above.Name} (${fmt(above.Points - current.Points + 1)} pts)`
+    : (rank === 1 ? "Top clan" : "—");
+
+  const atRisk = (rank && below && current)
+    ? `#${rank+1} — ${below.Name} (${fmt(current.Points - below.Points + 1)} pts)`
     : "—";
 
-  body.innerHTML=`
-    <div class="stat"><div class="k">Members</div><div class="v">${members.length}</div></div>
+  body.innerHTML = `
+    <div class="stat"><div class="k">Members</div><div class="v">${fmt(members.length)}</div></div>
     <div class="stat"><div class="k">To overtake</div><div class="v">${toOvertake}</div></div>
     <div class="stat"><div class="k">At risk from</div><div class="v">${atRisk}</div></div>
 
-    <div class="toggle" onclick="this.nextElementSibling.style.display=
-      this.nextElementSibling.style.display==='block'?'none':'block'">
-      ▶ Show members
-    </div>
-
+    <div class="toggle" onclick="toggleMembers(this)">▶ Show members</div>
     <div class="members">
-      <b>Officers (${officers.length})</b>
-      ${officers.map(m=>`<div class="member officer">${m.UserID}</div>`).join("")}
-      <b style="margin-top:6px;display:block">Members (${regular.length})</b>
-      ${regular.map(m=>`<div class="member">${m.UserID}</div>`).join("")}
+      <b>Officers (${fmt(officers.length)})</b>
+      ${officers.map(m=>`<div class="member officer">${m.UserID}</div>`).join("") || `<div class="member">—</div>`}
+      <b style="margin-top:6px;display:block">Members (${fmt(regular.length)})</b>
+      ${regular.map(m=>`<div class="member">${m.UserID}</div>`).join("") || `<div class="member">—</div>`}
     </div>
   `;
 }
 
+function toggleMembers(el){
+  const box = el.nextElementSibling;
+  const open = box.style.display === "block";
+  box.style.display = open ? "none" : "block";
+  el.textContent = open ? "▶ Show members" : "▼ Hide members";
+}
+
 async function loadAll(){
-  const [k,t,r]=await Promise.all([
+  const [k,t,r] = await Promise.all([
     getClan("KOHV"),
     getClan("TAUX"),
     getRanks()
   ]);
-  const list=r.data||[];
-  render("KOHV",k,list);
-  render("TAUX",t,list);
+  const list = r?.data || [];
+  render("KOHV", k, list);
+  render("TAUX", t, list);
 }
 loadAll();
 </script>
