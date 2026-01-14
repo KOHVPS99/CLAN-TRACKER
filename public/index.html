@@ -1,207 +1,149 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KOHV & TAUX — Clan Tracker</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clan Tracker</title>
 
-  <style>
-    :root{
-      --bg:#070A12;
-      --panel: rgba(255,255,255,.06);
-      --panel2: rgba(0,0,0,.28);
-      --line: rgba(255,255,255,.14);
-      --text:#EAF0FF;
-      --muted:#A8B3D6;
-      --gold:#facc15;
-      --silver:#cbd5e1;
-      --r:18px;
-    }
-
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      color:var(--text);
-      background:
-        radial-gradient(900px 600px at 20% 10%, rgba(124,58,237,.22), transparent 55%),
-        radial-gradient(850px 650px at 80% 20%, rgba(59,130,246,.18), transparent 58%),
-        var(--bg);
-    }
-
-    .wrap{max-width:1000px;margin:auto;padding:20px}
-
-    header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:16px;
-    }
-
-    h1{margin:0;font-size:20px}
-    .sub{font-size:13px;color:var(--muted)}
-
-    button{
-      padding:10px 14px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      font-weight:800;
-      cursor:pointer;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
-
-    .card{
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:var(--r);
-      overflow:hidden;
-    }
-
-    .head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:12px;
-      background:var(--panel2);
-      border-bottom:1px solid var(--line);
-    }
-
-    .left{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .pfp{
-      width:48px;
-      height:48px;
-      border-radius:14px;
-      object-fit:cover;
-      border:1px solid rgba(255,255,255,.2);
-    }
-
-    .name{
-      font-weight:900;
-      font-size:16px;
-    }
-
-    .place{
-      font-size:12px;
-      font-weight:900;
-      padding:4px 10px;
-      border-radius:999px;
-      margin-top:4px;
-      display:inline-block;
-    }
-
-    .first{
-      color:var(--gold);
-      border:1px solid rgba(250,204,21,.4);
-      background:rgba(250,204,21,.15);
-    }
-
-    .second{
-      color:var(--silver);
-      border:1px solid rgba(203,213,225,.4);
-      background:rgba(203,213,225,.15);
-    }
-
-    .rank{
-      font-size:12px;
-      color:var(--muted);
-      border:1px solid var(--line);
-      padding:6px 10px;
-      border-radius:12px;
-    }
-
-    .body{
-      padding:14px;
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-    }
-
-    .stat{
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.2);
-      border-radius:14px;
-      padding:10px;
-    }
-
-    .k{font-size:12px;color:var(--muted)}
-    .v{font-size:18px;font-weight:900}
-
-    .desc{
-      margin-top:10px;
-      font-size:13px;
-      color:var(--muted);
-    }
-
-    @media(max-width:800px){
-      .grid{grid-template-columns:1fr}
-      .stats{grid-template-columns:1fr}
-    }
-  </style>
+<style>
+:root{
+  --bg:#070A12;
+  --panel:rgba(255,255,255,.06);
+  --panel2:rgba(0,0,0,.28);
+  --line:rgba(255,255,255,.14);
+  --text:#EAF0FF;
+  --muted:#A8B3D6;
+  --gold:#facc15;
+  --silver:#cbd5e1;
+  --r:18px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Arial;
+  background:var(--bg);
+  color:var(--text);
+}
+.wrap{max-width:1000px;margin:auto;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+button{
+  padding:10px 14px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  font-weight:800;
+  cursor:pointer;
+}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  overflow:hidden;
+}
+.head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  background:var(--panel2);
+}
+.left{display:flex;align-items:center;gap:12px}
+.pfp{
+  width:48px;height:48px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.2);
+  object-fit:cover;
+}
+.place{
+  font-size:12px;
+  font-weight:900;
+  padding:4px 10px;
+  border-radius:999px;
+  display:inline-block;
+  margin-top:4px;
+}
+.first{color:var(--gold);border:1px solid rgba(250,204,21,.4)}
+.second{color:var(--silver);border:1px solid rgba(203,213,225,.4)}
+.rank{
+  font-size:12px;
+  border:1px solid var(--line);
+  padding:6px 10px;
+  border-radius:12px;
+}
+.body{padding:14px}
+.stat{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px;
+  margin-bottom:8px;
+}
+.k{color:var(--muted);font-size:12px}
+.v{font-size:15px;font-weight:900}
+.toggle{
+  margin-top:10px;
+  font-weight:800;
+  cursor:pointer;
+  color:#9ecbff;
+}
+.members{
+  display:none;
+  margin-top:8px;
+  max-height:220px;
+  overflow:auto;
+  border-top:1px solid var(--line);
+  padding-top:8px;
+}
+.member{font-size:13px;padding:3px 0}
+.officer{color:#facc15}
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 
 <body>
 <div class="wrap">
+<header>
+  <h1>Clan Tracker</h1>
+  <button onclick="loadAll()">Refresh</button>
+</header>
 
-  <header>
-    <div>
-      <h1>Clan Tracker</h1>
-      <div class="sub">KOHV (1st) • TAUX (2nd)</div>
-    </div>
-    <button onclick="loadAll()">Refresh</button>
-  </header>
+<div class="grid">
 
-  <div class="grid">
-
-    <!-- KOHV -->
-    <div class="card">
-      <div class="head">
-        <div class="left">
-          <img class="pfp"
-            src="https://cdn.discordapp.com/attachments/1342188579761160342/1460643923956469953/F29791E5-9C85-4CEC-8A95-591B501D5B09.png?ex=696852e8&is=69670168&hm=356fa3caa0e29e4b76d958a9547ccec7e508295107d9c4d8278620554db77de3&"
-            alt="KOHV">
-          <div>
-            <div class="name">KOHV</div>
-            <span class="place first">1st Clan</span>
-          </div>
-        </div>
-        <div class="rank" id="rankKOHV">Rank: —</div>
+<!-- KOHV -->
+<div class="card">
+  <div class="head">
+    <div class="left">
+      <img class="pfp"
+        src="https://cdn.discordapp.com/attachments/1342188579761160342/1460643923956469953/F29791E5-9C85-4CEC-8A95-591B501D5B09.png?ex=696852e8&is=69670168&hm=356fa3caa0e29e4b76d958a9547ccec7e508295107d9c4d8278620554db77de3&">
+      <div>
+        <b>KOHV</b>
+        <div class="place first">1st Clan</div>
       </div>
-      <div class="body" id="bodyKOHV">Loading…</div>
     </div>
-
-    <!-- TAUX -->
-    <div class="card">
-      <div class="head">
-        <div class="left">
-          <img class="pfp"
-            src="https://cdn.discordapp.com/attachments/1342188579761160342/1460645618027593963/433EDF80-E411-4268-B946-B55A4CD88F74.png?ex=6968547c&is=696702fc&hm=b71d8a59e81ecc250ae3dc1a9febb3c79c5cd01f586615784361575d1228c62d&"
-            alt="TAUX">
-          <div>
-            <div class="name">TAUX</div>
-            <span class="place second">2nd Clan</span>
-          </div>
-        </div>
-        <div class="rank" id="rankTAUX">Rank: —</div>
-      </div>
-      <div class="body" id="bodyTAUX">Loading…</div>
-    </div>
-
+    <div class="rank" id="rankKOHV">Rank —</div>
   </div>
+  <div class="body" id="bodyKOHV">Loading…</div>
+</div>
+
+<!-- TAUX -->
+<div class="card">
+  <div class="head">
+    <div class="left">
+      <img class="pfp"
+        src="https://cdn.discordapp.com/attachments/1342188579761160342/1460645618027593963/433EDF80-E411-4268-B946-B55A4CD88F74.png?ex=6968547c&is=696702fc&hm=b71d8a59e81ecc250ae3dc1a9febb3c79c5cd01f586615784361575d1228c62d&">
+      <div>
+        <b>TAUX</b>
+        <div class="place second">2nd Clan</div>
+      </div>
+    </div>
+    <div class="rank" id="rankTAUX">Rank —</div>
+  </div>
+  <div class="body" id="bodyTAUX">Loading…</div>
+</div>
+
+</div>
 </div>
 
 <script>
@@ -215,26 +157,47 @@ function findRank(list,name){
   const i=list.findIndex(x=>x.Name===name);
   return i===-1?null:i+1;
 }
-function medals(c){
-  return (c.GoldMedals||0)+(c.SilverMedals||0)+(c.BronzeMedals||0);
-}
-function render(name,data,rank){
+function render(name,data,list){
   const body=document.getElementById("body"+name);
+  const rank=findRank(list,name);
   document.getElementById("rank"+name).textContent=
-    "Rank: "+(rank??"not in top 200");
-
-  if(!data?.data){ body.textContent="Failed to load"; return; }
+    rank?`Rank #${rank}`:"Rank —";
 
   const c=data.data;
+  const members=c.Members||[];
+  const officers=members.filter(m=>m.PermissionLevel>=80);
+  const regular=members.filter(m=>m.PermissionLevel<80);
+
+  const above = rank && list[rank-2];
+  const below = rank && list[rank];
+
+  const toOvertake = above
+    ? `#${rank-1} — ${above.Name} (${above.Points - list[rank-1].Points + 1} pts)`
+    : "Top clan";
+
+  const atRisk = below
+    ? `#${rank+1} — ${below.Name} (${list[rank-1].Points - below.Points + 1} pts)`
+    : "—";
+
   body.innerHTML=`
-    <div class="stats">
-      <div class="stat"><div class="k">Members</div><div class="v">${c.Members.length}</div></div>
-      <div class="stat"><div class="k">Guild Level</div><div class="v">${c.GuildLevel}</div></div>
-      <div class="stat"><div class="k">Medals</div><div class="v">${medals(c)}</div></div>
+    <div class="stat"><div class="k">Members</div><div class="v">${members.length}</div></div>
+    <div class="stat"><div class="k">To overtake</div><div class="v">${toOvertake}</div></div>
+    <div class="stat"><div class="k">At risk from</div><div class="v">${atRisk}</div></div>
+
+    <div class="toggle" onclick="this.nextElementSibling.style.display=
+      this.nextElementSibling.style.display==='block'?'none':'block'">
+      ▶ Show members
     </div>
-    <div class="desc"><b>Description:</b> ${c.Desc||"—"}</div>
+
+    <div class="members">
+      <b>Officers (${officers.length})</b>
+      ${officers.map(m=>`<div class="member officer">${m.UserID}</div>`).join("")}
+      <b style="margin-top:6px;display:block">Members (${regular.length})</b>
+      ${regular.map(m=>`<div class="member">${m.UserID}</div>`).join("")}
+    </div>
   `;
 }
+
 async function loadAll(){
   const [k,t,r]=await Promise.all([
     getClan("KOHV"),
@@ -242,11 +205,10 @@ async function loadAll(){
     getRanks()
   ]);
   const list=r.data||[];
-  render("KOHV",k,findRank(list,"KOHV"));
-  render("TAUX",t,findRank(list,"TAUX"));
+  render("KOHV",k,list);
+  render("TAUX",t,list);
 }
 loadAll();
 </script>
-
 </body>
 </html>
